@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePass - Password Manager</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3064/3064155.png">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #564fd8;
+            --secondary: #ff6584;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+            --gray: #a0aec0;
+            --gray-dark: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Moul', 'Kantumruy Pro', sans-serif;
+            font-weight: normal;
+        }
+
+        .modal-title {
+            font-family: 'Moulpali', 'Moul', 'Kantumruy Pro', sans-serif;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header-scrolled {
+            padding: 0.5rem 0;
+            background: rgba(108, 99, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Moul', sans-serif;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 10rem 0 5rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 0;
+        }
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--dark);
+        }
+
+        .hero-title span {
+            color: var(--primary);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--gray-dark);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--dark);
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-desc {
+            color: var(--gray-dark);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .step.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            background: rgba(108, 99, 255, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .step-content p {
+            color: var(--gray-dark);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.1);
+        }
+
+        .pricing-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-bottom-left-radius: 10px;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--gray-dark);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: var(--gray-dark);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features li i {
+            color: var(--success);
+            margin-right: 0.5rem;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--gray-dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo img {
+            height: 30px;
+            width: auto;
+        }
+
+        .footer-logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: 'Moul', sans-serif;
+        }
+
+        .footer-about p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-newsletter p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
+        .newsletter-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-toggle span {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--primary);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        .modal-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-form input,
+        .modal-form textarea,
+        .modal-form select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
+        .modal-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-form button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                margin-bottom: 3rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--primary);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3rem;
+                transition: left 0.3s;
+            }
+
+            nav ul.active {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .language-toggle {
+                bottom: 80px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-number {
+                margin-bottom: 1rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-form button {
+                padding: 0.8rem;
+            }
+        }
+
+        /* Khmer Language Styles */
+        body.khmer .en-content {
+            display: none;
+        }
+
+        body:not(.khmer) .kh-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="SecurePass Logo">
+                <span class="logo-text">SecurePass</span>
+            </a>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#home" class="en-content">Home</a><a href="#home" class="kh-content">ទំព័រដើម</a></li>
+                    <li><a href="#features" class="en-content">Features</a><a href="#features" class="kh-content">មុខងារ</a></li>
+                    <li><a href="#how-it-works" class="en-content">How It Works</a><a href="#how-it-works" class="kh-content">របៀបដំណើរការ</a></li>
+                    <li><a href="#pricing" class="en-content">Pricing</a><a href="#pricing" class="kh-content">តម្លៃ</a></li>
+                    <li><a href="#testimonials" class="en-content">Testimonials</a><a href="#testimonials" class="kh-content">មតិអ្នកប្រើ</a></li>
+                    <li><a href="#" class="btn btn-secondary en-content">Get Started</a><a href="#" class="btn btn-secondary kh-content">ចាប់ផ្តើម</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title animate__animated animate__fadeInDown en-content">Secure Your Digital Life with <span>SecurePass</span></h1>
+                <h1 class="hero-title animate__animated animate__fadeInDown kh-content">ការពារជីវិតឌីជីថលរបស់អ្នកជាមួយ <span>SecurePass</span></h1>
+                <p class="hero-subtitle animate__animated animate__fadeInDown animate__delay-1s en-content">The most secure and easy-to-use password manager that keeps your online accounts safe.</p>
+                <p class="hero-subtitle animate__animated animate__fadeInDown animate__delay-1s kh-content">កម្មវិធីគ្រប់គ្រងពាក្យសម្ងាត់ដែលមានសុវត្ថិភាព និងងាយស្រួលប្រើបំផុតដែលរក្សាគណនីអនឡាញរបស់អ្នកឱ្យមានសុវត្ថិភាព។</p>
+                <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="#" class="btn btn-primary en-content">Get Started for Free</a>
+                    <a href="#" class="btn btn-primary kh-content">ចាប់ផ្តើមដោយឥតគិតថ្លៃ</a>
+                    <a href="#" class="btn btn-secondary en-content">Learn More</a>
+                    <a href="#" class="btn btn-secondary kh-content">រៀនបន្ថែម</a>
+                </div>
+            </div>
+            <div class="hero-image animate__animated animate__fadeInRight animate__delay-1s">
+                <img src="https://cdn-icons-png.flaticon.com/512/4715/4715317.png" alt="Password Manager Illustration">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title animate__animated animate__fadeIn en-content">Amazing <span>Features</span></h2>
+            <h2 class="section-title animate__animated animate__fadeIn kh-content">មុខងារ <span>អស្ចារ្យ</span></h2>
+            <div class="features-grid">
+                <div class="feature-card animate__animated animate__fadeInUp">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title en-content">Military-Grade Encryption</h3>
+                    <h3 class="feature-title kh-content">ការអ៊ិនគ្រីបកម្រិតយោធា</h3>
+                    <p class="feature-desc en-content">Your passwords are encrypted with AES-256 encryption, the same standard used by banks and governments.</p>
+                    <p class="feature-desc kh-content">ពាក្យសម្ងាត់របស់អ្នកត្រូវបានអ៊ិនគ្រីបជាមួយនឹងការអ៊ិនគ្រីប AES-256 ដែលជាស្តង់ដារដូចគ្នាដែលត្រូវបានប្រើប្រាស់ដោយធនាគារ និងរដ្ឋាភិបាល។</p>
+                </div>
+                <div class="feature-card animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="feature-icon">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <h3 class="feature-title en-content">Biometric Authentication</h3>
+                    <h3 class="feature-title kh-content">ការផ្ទៀងផ្ទាត់អង្គជាតិ</h3>
+                    <p class="feature-desc en-content">Access your passwords instantly with Face ID, Touch ID, or fingerprint recognition.</p>
+                    <p class="feature-desc kh-content">ចូលប្រើពាក្យសម្ងាត់របស់អ្នកភ្លាមៗជាមួយនឹង Face ID, Touch ID ឬការស្គាល់ស្នាមមេដៃ។</p>
+                </div>
+                <div class="feature-card animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="feature-title en-content">Cross-Platform Sync</h3>
+                    <h3 class="feature-title kh-content">ការធ្វើសមកាលកម្មឆ្លងវេទិកា</h3>
+                    <p class="feature-desc en-content">Access your passwords on all your devices, including phones, tablets, and computers.</p>
+                    <p class="feature-desc kh-content">ចូលប្រើពាក្យសម្ងាត់របស់អ្នកនៅលើឧបករណ៍ទាំងអស់របស់អ្នក រួមទាំងទូរស័ព្ទ ថេប្លេត និងកុំព្យូទ័រ។</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title animate__animated animate__fadeIn en-content">How <span>It Works</span></h2>
+            <h2 class="section-title animate__animated animate__fadeIn kh-content">របៀប <span>ដំណើរការ</span></h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="en-content">Create Your Account</h3>
+                        <h3 class="kh-content">បង្កើតគណនីរបស់អ្នក</h3>
+                        <p class="en-content">Sign up for a free SecurePass account in just a few seconds.</p>
+                        <p class="kh-content">ចុះឈ្មោះសម្រាប់គណនី SecurePass ដោយឥតគិតថ្លៃក្នុងរយៈពេលតែប៉ុន្មានវិនាទី។</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="en-content">Add Your Passwords</h3>
+                        <h3 class="kh-content">បន្ថែមពាក្យសម្ងាត់របស់អ្នក</h3>
+                        <p class="en-content">Import your existing passwords or create new secure ones with our generator.</p>
+                        <p class="kh-content">នាំចូលពាក្យសម្ងាត់ដែលមានស្រាប់របស់អ្នក ឬបង្កើតពាក្យសម្ងាត់ថ្មីដែលមានសុវត្ថិភាពជាមួយនឹងម៉ាស៊ីនបង្កើតរបស់យើង។</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="en-content">Access Anywhere</h3>
+                        <h3 class="kh-content">ចូលប្រើគ្រប់ទីកន្លែង</h3>
+                        <p class="en-content">Use SecurePass on all your devices to automatically fill in your passwords.</p>
+                        <p class="kh-content">ប្រើ SecurePass នៅលើឧបករណ៍ទាំងអស់របស់អ្នកដើម្បីបំពេញពាក្យសម្ងាត់របស់អ្នកដោយស្វ័យប្រវត្តិ។</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title animate__animated animate__fadeIn en-content">Simple <span>Pricing</span></h2>
+            <h2 class="section-title animate__animated animate__fadeIn kh-content">តម្លៃ <span>សាមញ្ញ</span></h2>
+            <div class="pricing-grid">
+                <div class="pricing-card animate__animated animate__fadeInUp">
+                    <h3 class="pricing-title en-content">Free</h3>
+                    <h3 class="pricing-title kh-content">ឥតគិតថ្លៃ</h3>
+                    <div class="pricing-price en-content">$0 <span>/ forever</span></div>
+                    <div class="pricing-price kh-content">$0 <span>/ ជារៀងរហូត</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> <span class="en-content">Store up to 50 passwords</span><span class="kh-content">ផ្ទុកពាក្យសម្ងាត់រហូតដល់ទៅ 50</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Access on 1 device</span><span class="kh-content">ចូលប្រើនៅលើឧបករណ៍ 1</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Basic security</span><span class="kh-content">សុវត្ថិភាពមូលដ្ឋាន</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Password generator</span><span class="kh-content">ម៉ាស៊ីនបង្កើតពាក្យសម្ងាត់</span></li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary en-content">Get Started</a>
+                    <a href="#" class="btn btn-secondary kh-content">ចាប់ផ្តើម</a>
+                </div>
+                <div class="pricing-card popular animate__animated animate__fadeInUp animate__delay-1s">
+                    <h3 class="pricing-title en-content">Premium</h3>
+                    <h3 class="pricing-title kh-content">វគ្គពិសេស</h3>
+                    <div class="pricing-price en-content">$4.99 <span>/ month</span></div>
+                    <div class="pricing-price kh-content">$4.99 <span>/ ខែ</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> <span class="en-content">Unlimited passwords</span><span class="kh-content">ពាក្យសម្ងាត់គ្មានដែនកំណត់</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Access on 5 devices</span><span class="kh-content">ចូលប្រើនៅលើឧបករណ៍ 5</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Advanced security</span><span class="kh-content">សុវត្ថិភាពកម្រិតខ្ពស់</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Priority support</span><span class="kh-content">ការគាំទ្រអាទិភាព</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Dark web monitoring</span><span class="kh-content">ការត្រួតពិនិត្យអ៊ីនធឺណិតងងឹត</span></li>
+                    </ul>
+                    <a href="#" class="btn btn-primary en-content">Choose Plan</a>
+                    <a href="#" class="btn btn-primary kh-content">ជ្រើសរើសគម្រោង</a>
+                </div>
+                <div class="pricing-card animate__animated animate__fadeInUp animate__delay-2s">
+                    <h3 class="pricing-title en-content">Family</h3>
+                    <h3 class="pricing-title kh-content">គ្រួសារ</h3>
+                    <div class="pricing-price en-content">$9.99 <span>/ month</span></div>
+                    <div class="pricing-price kh-content">$9.99 <span>/ ខែ</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> <span class="en-content">For up to 5 users</span><span class="kh-content">សម្រាប់រហូតដល់ទៅ 5 អ្នកប្រើ</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Unlimited devices</span><span class="kh-content">ឧបករណ៍គ្មានដែនកំណត់</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Shared folders</span><span class="kh-content">ថតចែករំលែក</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">Family recovery</span><span class="kh-content">ការសង្គ្រោះគ្រួសារ</span></li>
+                        <li><i class="fas fa-check"></i> <span class="en-content">24/7 support</span><span class="kh-content">ការគាំទ្រ 24/7</span></li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary en-content">Choose Plan</a>
+                    <a href="#" class="btn btn-secondary kh-content">ជ្រើសរើសគម្រោង</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title animate__animated animate__fadeIn en-content">What Our <span>Users Say</span></h2>
+            <h2 class="section-title animate__animated animate__fadeIn kh-content">អ្វីដែល <span>អ្នកប្រើរបស់យើង</span> និយាយ</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate__animated animate__fadeIn">
+                    <p class="testimonial-text en-content">SecurePass has completely changed how I manage my passwords. I no longer have to remember hundreds of passwords or reuse them across sites.</p>
+                    <p class="testimonial-text kh-content">SecurePass បានផ្លាស់ប្តូរយ៉ាងពេញលេញអំពីរបៀបដែលខ្ញុំគ្រប់គ្រងពាក្យសម្ងាត់របស់ខ្ញុំ។ ខ្ញុំមិនចាំបាច់ចងចាំពាក្យសម្ងាត់រាប់រយ ឬប្រើវាឡើងវិញនៅទូទាំងគេហទំព័រទៀតទេ។</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah J.">
+                        <div class="author-info">
+                            <h4>Sarah J.</h4>
+                            <p class="en-content">Marketing Director</p>
+                            <p class="kh-content">អ្នកដឹកនាំទីផ្សារ</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card animate__animated animate__fadeIn animate__delay-1s">
+                    <p class="testimonial-text en-content">As a business owner, security is my top priority. SecurePass gives me peace of mind knowing my company's data is protected.</p>
+                    <p class="testimonial-text kh-content">ជាម្ចាស់អាជីវកម្ម សុវត្ថិភាពគឺជាអាទិភាពខ្ពស់បំផុតរបស់ខ្ញុំ។ SecurePass ផ្តល់ឱ្យខ្ញុំនូវភាពស្ងប់ស្ងាត់ដឹងថាទិន្នន័យរបស់ក្រុមហ៊ុនរបស់ខ្ញុំត្រូវបានការពារ។</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="David L.">
+                        <div class="author-info">
+                            <h4>David L.</h4>
+                            <p class="en-content">CEO, TechStart</p>
+                            <p class="kh-content">អគ្គនាយក, TechStart</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card animate__animated animate__fadeIn animate__delay-2s">
+                    <p class="testimonial-text en-content">The family plan is perfect for us. We can share important accounts while keeping our personal passwords private and secure.</p>
+                    <p class="testimonial-text kh-content">គម្រោងគ្រួសារគឺល្អឥតខ្ចោះសម្រាប់យើង។ យើងអាចចែករំលែកគណនីសំខាន់ៗខណៈពេលដែលរក្សាពាក្យសម្ងាត់ផ្ទាល់ខ្លួនរបស់យើងឱ្យមានឯកជន និងមានសុវត្ថិភាព។</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Maria G.">
+                        <div class="author-info">
+                            <h4>Maria G.</h4>
+                            <p class="en-content">Graphic Designer</p>
+                            <p class="kh-content">អ្នករចនាក្រាហ្វិក</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title animate__animated animate__fadeIn en-content">Ready to Secure Your Digital Life?</h2>
+            <h2 class="cta-title animate__animated animate__fadeIn kh-content">ត្រៀមខ្លួនដើម្បីការពារជីវិតឌីជីថលរបស់អ្នកហើយឬនៅ?</h2>
+            <p class="cta-subtitle animate__animated animate__fadeIn animate__delay-1s en-content">Join millions of users who trust SecurePass to keep their online accounts safe and secure.</p>
+            <p class="cta-subtitle animate__animated animate__fadeIn animate__delay-1s kh-content">ចូលរួមជាមួយអ្នកប្រើប្រាស់រាប់លាននាក់ដែលទុកចិត្ត SecurePass ដើម្បីរក្សាគណនីអនឡាញរបស់ពួកគេឱ្យមានសុវត្ថិភាព និងមានសុវត្ថិភាព។</p>
+            <a href="#" class="btn btn-primary animate__animated animate__fadeInUp animate__delay-2s en-content">Get Started for Free</a>
+            <a href="#" class="btn btn-primary animate__animated animate__fadeInUp animate__delay-2s kh-content">ចាប់ផ្តើមដោយឥតគិតថ្លៃ</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="SecurePass Logo">
+                        <span class="footer-logo-text">SecurePass</span>
+                    </a>
+                    <p class="en-content">The most secure password manager that helps you generate and store all your passwords in one secure place.</p>
+                    <p class="kh-content">កម្មវិធីគ្រប់គ្រងពាក្យសម្ងាត់ដែលមានសុវត្ថិភាពបំផុតដែលជួយអ្នកបង្កើត និងរក្សាទុកពាក្យសម្ងាត់ទាំងអស់របស់អ្នកនៅកន្លែងមួយដែលមានសុវត្ថិភាព។</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3 class="en-content">Quick Links</h3>
+                    <h3 class="kh-content">តំណភ្ជាប់រហ័ស</h3>
+                    <ul>
+                        <li><a href="#home" class="en-content">Home</a><a href="#home" class="kh-content">ទំព័រដើម</a></li>
+                        <li><a href="#features" class="en-content">Features</a><a href="#features" class="kh-content">មុខងារ</a></li>
+                        <li><a href="#how-it-works" class="en-content">How It Works</a><a href="#how-it-works" class="kh-content">របៀបដំណើរការ</a></li>
+                        <li><a href="#pricing" class="en-content">Pricing</a><a href="#pricing" class="kh-content">តម្លៃ</a></li>
+                        <li><a href="#testimonials" class="en-content">Testimonials</a><a href="#testimonials" class="kh-content">មតិអ្នកប្រើ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="en-content">Support</h3>
+                    <h3 class="kh-content">ការគាំទ្រ</h3>
+                    <ul>
+                        <li><a href="#" class="en-content">Help Center</a><a href="#" class="kh-content">មជ្ឈមណ្ឌលជំនួយ</a></li>
+                        <li><a href="#" class="en-content">Contact Us</a><a href="#" class="kh-content">ទាក់ទងមកយើងខ្ញុំ</a></li>
+                        <li><a href="#" class="en-content">Privacy Policy</a><a href="#" class="kh-content">គោលការណ៍ឯកជនភាព</a></li>
+                        <li><a href="#" class="en-content">Terms of Service</a><a href="#" class="kh-content">លក្ខខណ្ឌសេវាកម្ម</a></li>
+                        <li><a href="#" class="en-content">FAQ</a><a href="#" class="kh-content">សំណួរដែលសួរញឹកញាប់</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3 class="en-content">Newsletter</h3>
+                    <h3 class="kh-content">ព្រឹត្តិប័ត្រព័ត៌មាន</h3>
+                    <p class="en-content">Subscribe to our newsletter to get updates on new features and security tips.</p>
+                    <p class="kh-content">ជាវព្រឹត្តិប័ត្ររបស់យើងដើម្បីទទួលបានការអាប់ដេតលើមុខងារថ្មី និងគន្លឹះសុវត្ថិភាព។</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" class="en-content" required>
+                        <input type="email" placeholder="អ៊ីមែលរបស់អ្នក" class="kh-content" required>
+                        <button type="submit" class="en-content">Subscribe</button>
+                        <button type="submit" class="kh-content">ជាវ</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="en-content">2025 - All rights reserved. Provide by Mr. Phekdey PHORN</p>
+                <p class="kh-content">2025 - រក្សារ​សិទ្ធិ​គ្រប់​យ៉ាង ដោយលោក ផន ភក្ដី។</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <span class="en-content">English</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="language-toggle">
+            <span class="slider"></span>
+        </label>
+        <span class="kh-content">ភាសាខ្មែរ</span>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <h2 class="modal-title en-content">Create Your Account</h2>
+            <h2 class="modal-title kh-content">បង្កើតគណនីរបស់អ្នក</h2>
+            <form class="modal-form">
+                <div class="form-group">
+                    <label for="name" class="en-content">Full Name</label>
+                    <label for="name" class="kh-content">ឈ្មោះពេញ</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="en-content">Email Address</label>
+                    <label for="email" class="kh-content">អាសយដ្ឋានអ៊ីមែល</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="en-content">Password</label>
+                    <label for="password" class="kh-content">ពាក្យសម្ងាត់</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="plan" class="en-content">Select Plan</label>
+                    <label for="plan" class="kh-content">ជ្រើសរើសគម្រោង</label>
+                    <select id="plan">
+                        <option value="free" class="en-content">Free</option>
+                        <option value="free" class="kh-content">ឥតគិតថ្លៃ</option>
+                        <option value="premium" class="en-content">Premium ($4.99/month)</option>
+                        <option value="premium" class="kh-content">វគ្គពិសេស ($4.99/ខែ)</option>
+                        <option value="family" class="en-content">Family ($9.99/month)</option>
+                        <option value="family" class="kh-content">គ្រួសារ ($9.99/ខែ)</option>
+                    </select>
+                </div>
+                <button type="submit" class="en-content">Create Account</button>
+                <button type="submit" class="kh-content">បង្កើតគណនី</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (this.getAttribute('href') === '#') return;
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
+        });
+
+        // Back to Top Button
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Language Toggle
+        const languageToggle = document.getElementById('language-toggle');
+        languageToggle.addEventListener('change', () => {
+            document.body.classList.toggle('khmer');
+        });
+
+        // Modal
+        const modal = document.getElementById('signup-modal');
+        const modalClose = document.getElementById('modal-close');
+        const signupButtons = document.querySelectorAll('.btn-primary:not(.kh-content), .btn-primary:not(.en-content)');
+
+        signupButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Animate Steps on Scroll
+        const steps = document.querySelectorAll('.step');
+        
+        const animateOnScroll = () => {
+            steps.forEach((step, index) => {
+                const stepPosition = step.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (stepPosition < screenPosition) {
+                    setTimeout(() => {
+                        step.classList.add('animate');
+                    }, index * 200);
+                }
+            });
+        };
+
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
+
+    <!-- Load Moul and Moulpali fonts (Khmer fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Moulpali';
+            src: url('https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main/phaseIII_only/unhinted/ttf/NotoSansKhmer/NotoSansKhmer-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</body>
+</html>
